@@ -1,0 +1,37 @@
+
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
+
+class Logarithm {
+public:
+    Logarithm(double base, double number) {
+        if (base <= 0 || number <= 0) {
+            throw std::invalid_argument("Name and Base must be positive, greater than zero");
+        }
+        base_ = base;
+        number_ = number;
+    }
+    double Calculate() const {
+      //  try {
+            return std::log(number_) / std::log(base_);
+      //  } catch (std::exception& e) {
+      //      throw std::runtime_error("An error has occurred calculating logarithm.");
+        //}
+    }
+private:
+    double base_;
+    double number_;
+};
+int main (){
+//le Calculate() const {
+        try {
+        Logarithm logarithm(-1,4);
+        std::cout<<logarithm.Calculate();
+        }
+            //return std::log(number_) / std::log(base_);
+         catch (std::exception& e) {std::cout<<e.what();
+            // std::runtime_error("An error has occurred calculating logarithm.");
+        }
+        return 0;
+}
