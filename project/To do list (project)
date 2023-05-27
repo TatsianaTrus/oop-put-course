@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -53,7 +52,7 @@ int main() {
         std::cerr << "Exception: " << e.what() << '\n';
     }
     Task task1("Buy groceries-milk, bread, cream, avocado, green tee", "Milk, bread, cream, eggs", "2023-05-27");
-    Task task2("Do laundry", "Wash clothes", "2022-01-02");
+    Task task2("Do laundry", "Wash clothes", "2023-05-28");
 
 
     todo.addTask(task1);
