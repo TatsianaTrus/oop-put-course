@@ -1,0 +1,78 @@
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+class Task {
+public:
+    Task(std::string name, std::string description, std::string due_date)
+        : name_(name), description_(description), due_date_(due_date) {}
+
+    std::string getName() const { return name_; }
+    std::string getDescription() const { return description_; }
+    std::string getDueDate() const { return due_date_; }
+
+private:
+    std::string name_;
+    std::string description_;
+    std::string due_date_;
+};
+
+class ToDoList {
+public:
+    void addTask(Task task) {
+        tasks_.push_back(task);
+    }
+
+    void removeTask(int index) {
+        if (index < 0 || index >= tasks_.size()) {
+            throw std::out_of_range("Index out of range");
+        }
+        tasks_.erase(tasks_.begin() + index);
+    }
+
+    Task getTask(int index) const {
+        if (index < 0 || index >= tasks_.size()) {
+            throw std::out_of_range("Index out of range");
+        }
+        return tasks_[index];
+    }
+
+    int getSize() const { return tasks_.size(); }
+
+private:
+    std::vector<Task> tasks_;
+};
+
+int main() {
+    ToDoList todo;
+
+    try {
+        todo.removeTask(0);
+    } catch (std::out_of_range& e) {
+        std::cerr << "Exception: " << e.what() << '\n';
+    }
+    Task task1("Buy groceries-milk, bread, cream, avocado, green tee", "Milk, bread, cream, eggs", "2023-05-27");
+    Task task2("Do laundry", "Wash clothes", "2022-01-02");
+
+
+    todo.addTask(task1);
+    todo.addTask(task2);
+
+    std::cout << "To do list:\n";
+    for (int i = 0; i < todo.getSize(); ++i) {
+        Task task = todo.getTask(i);
+        std::cout << "- " << task.getName() << " (" << task.getDueDate() << ")\n";
+    }
+
+    todo.removeTask(0);
+
+    std::cout << "To do list after removing first task:\n";
+    for (int i = 0; i < todo.getSize(); ++i) {
+        Task task = todo.getTask(i);
+        std::cout << "- " << task.getName() << " (" << task.getDueDate() << ")\n";
+    }
+
+    return 0;
+}
+
