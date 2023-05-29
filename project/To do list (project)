@@ -1,9 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdexcept>
 
 class Task {
 public:
+    Task() : name_(""), description_(""), due_date_("") {}
     Task(std::string name, std::string description, std::string due_date)
         : name_(name), description_(description), due_date_(due_date) {}
 
@@ -19,29 +21,44 @@ private:
 
 class ToDoList {
 public:
-    void addTask(Task task) {
+    void addTask(const Task& task) {
         tasks_.push_back(task);
     }
 
     void removeTask(int index) {
         if (index < 0 || index >= tasks_.size()) {
-            throw std::out_of_range("Index out of range");
+            throw std::out_of_range("What you need to do and the date");
         }
         tasks_.erase(tasks_.begin() + index);
     }
 
     Task getTask(int index) const {
         if (index < 0 || index >= tasks_.size()) {
-            throw std::out_of_range("Index out of range");
+            throw std::out_of_range("What you need to do and the date ");
         }
         return tasks_[index];
     }
 
     int getSize() const { return tasks_.size(); }
 
+    void clearTasks() {
+        tasks_.clear();
+    }
+
+    const std::vector<Task>& getTasks() const {
+        return tasks_;
+    }
+
 private:
     std::vector<Task> tasks_;
 };
+
+void printToDoList(const ToDoList& todo) {
+    std::cout << ":\n";
+   // for (const auto& task : todo.getTasks()) {
+     //   std::cout << "- " << task.getName() << " (" << task.getDueDate() << ")\n";
+    //}
+}
 
 int main() {
     ToDoList todo;
@@ -49,16 +66,18 @@ int main() {
     try {
         todo.removeTask(0);
     } catch (std::out_of_range& e) {
-        std::cerr << "Exception: " << e.what() << '\n';
+        std::cerr << "Be careful: " << e.what() << '\n';
     }
-    Task task1("Buy groceries-milk, bread, cream, avocado, green tee", "Milk, bread, cream, eggs", "2023-05-27");
-    Task task2("Do laundry", "Wash clothes", "2023-05-28");
 
+    Task task1("Visit the laundry-pick up a suit", "Pick up a suit", "2023-05-27");
+    Task task2("Hiking with a dog to the vet", "With Mozart", "2023-05-27");
+    Task task3("Ask the boss for a raise", "Ask the boss", "2023-05-27");
 
     todo.addTask(task1);
     todo.addTask(task2);
+    todo.addTask(task3);
 
-    std::cout << "To do list:\n";
+     std::cout << "To do list:\n";
     for (int i = 0; i < todo.getSize(); ++i) {
         Task task = todo.getTask(i);
         std::cout << "- " << task.getName() << " (" << task.getDueDate() << ")\n";
@@ -66,12 +85,29 @@ int main() {
 
     todo.removeTask(0);
 
-    std::cout << "To do list after removing first task:\n";
+    std::cout << "To do list after first task:\n";
     for (int i = 0; i < todo.getSize(); ++i) {
         Task task = todo.getTask(i);
         std::cout << "- " << task.getName() << " (" << task.getDueDate() << ")\n";
     }
 
+    todo.addTask(task1);
+    todo.addTask(task2);
+    todo.addTask(task3);
+
+    printToDoList(todo);
+
+    todo.removeTask(0);
+    printToDoList(todo);
+
+    todo.clearTasks();
+    printToDoList(todo);
+
+    try {
+        todo.getTask(0);
+    } catch (std::out_of_range& e) {
+        std::cerr << "Be careful:: " << e.what() << '\n';
+    }
+
     return 0;
 }
-
