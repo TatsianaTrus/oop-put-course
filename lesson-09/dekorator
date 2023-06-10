@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+
+class IntegerSequence {
+public:
+    virtual std::vector<int> Numbers() = 0;
+};
+
+
+class VectorSequence : public IntegerSequence {
+private:
+    std::vector<int> numbers;
+public:
+    VectorSequence(std::vector<int> nums) : numbers(nums) {}
+    std::vector<int> Numbers() override {
+        return numbers;
+    }
+};
+
+
+class PositiveSequence : public IntegerSequence {
+private:
+    IntegerSequence* sequence;
+public:
+    PositiveSequence(IntegerSequence* seq) : sequence(seq) {}
+    std::vector<int> Numbers() override {
+        std::vector<int> nums = sequence->Numbers();
+        nums.erase(std::remove_if(nums.begin(), nums.end(), [](int n){return n < 0;}), nums.end());
+        return nums;
+    }
+};
+
+
+class EvenSequence : public IntegerSequence {
+private:
+    IntegerSequence* sequence;
+public:
+    EvenSequence(IntegerSequence* seq) : sequence(seq) {}
+    std::vector<int> Numbers() override {
+        std::vector<int> nums = sequence->Numbers();
+        nums.erase(std::remove_if(nums.begin(), nums.end(), [](int n){return n % 2 != 0;}), nums.end());
+        return nums;
+    }
+};
+
+
+class SortedSequence : public IntegerSequence {
+private:
+    IntegerSequence* sequence;
+public:
+    SortedSequence(IntegerSequence* seq) : sequence(seq) {}
+    std::vector<int> Numbers() override {
+        std::vector<int> nums = sequence->Numbers();
+        std::sort(nums.begin(), nums.end());
+        return nums;
+    }
+};
+
+int main() {
+    std::vector<int> nums = {9, -5, 18, 4, -3, 2, 0, 10, 7, 14, 8, -6, 12, 6};
+    IntegerSequence* seq = new VectorSequence(nums);
+    seq = new PositiveSequence(seq);
+    seq = new EvenSequence(seq);
+    seq = new SortedSequence(seq);
+
+    std::vector<int> processed_nums = seq->Numbers();
+
+    std::cout << "The initial sequence of digits: ";
+    for (int n : nums) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "Modified sequence: ";
+    for (int n : processed_nums) {
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+
+    delete seq;
+    return 0;
+}
